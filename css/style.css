@@ -957,6 +957,21 @@ img {
     min-height: 120px;
 }
 
+.form-status {
+    min-height: 1.5em;
+    margin-top: 12px;
+    color: var(--primary-dark);
+    font-size: 0.9rem;
+}
+
+.contact-trap {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
 /* ==================== */
 /* FOOTER               */
 /* ==================== */
