@@ -47,9 +47,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Smooth Scroll for Anchor Links
     document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
         anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const targetId = this.getAttribute('href').slice(1);
+            if (!targetId) return;
+
+            const target = document.getElementById(targetId);
             if (target) {
+                e.preventDefault();
                 target.scrollIntoView({
                     behavior: 'smooth',
                     block: 'start'
@@ -63,20 +66,28 @@ document.addEventListener('DOMContentLoaded', function() {
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            if (!contactForm.reportValidity()) return;
 
-            const btn = this.querySelector('button[type="submit"]');
-            if (!btn) return;
+            const formData = new FormData(contactForm);
+            const division = contactForm.elements.division;
+            const subject = 'MVBC website inquiry: ' + division.options[division.selectedIndex].text;
+            const body = [
+                'Name: ' + formData.get('name'),
+                'Email: ' + formData.get('email'),
+                'Phone: ' + (formData.get('phone') || 'Not provided'),
+                'Division: ' + division.options[division.selectedIndex].text,
+                '',
+                'Message:',
+                formData.get('message')
+            ].join('\n');
+            const mailtoUrl = 'mailto:info@mvbc.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+            const formStatus = document.getElementById('contactFormStatus');
 
-            const originalText = btn.textContent;
-            btn.textContent = 'Sending...';
-            btn.disabled = true;
+            if (formStatus) {
+                formStatus.textContent = 'Your email app should open with this inquiry ready to send. If it does not, email info@mvbc.com.';
+            }
 
-            setTimeout(function() {
-                alert('Thank you for your message! We will get back to you soon.');
-                contactForm.reset();
-                btn.textContent = originalText;
-                btn.disabled = false;
-            }, 1500);
+            window.location.href = mailtoUrl;
         });
     }
 
