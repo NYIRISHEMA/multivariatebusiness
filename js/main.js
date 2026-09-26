@@ -69,25 +69,49 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!contactForm.reportValidity()) return;
 
             const formData = new FormData(contactForm);
-            const division = contactForm.elements.division;
-            const subject = 'MVBC website inquiry: ' + division.options[division.selectedIndex].text;
-            const body = [
-                'Name: ' + formData.get('name'),
-                'Email: ' + formData.get('email'),
-                'Phone: ' + (formData.get('phone') || 'Not provided'),
-                'Division: ' + division.options[division.selectedIndex].text,
-                '',
-                'Message:',
-                formData.get('message')
-            ].join('\n');
-            const mailtoUrl = 'mailto:info@mvbc.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
             const formStatus = document.getElementById('contactFormStatus');
+            const submitButton = contactForm.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton ? submitButton.textContent : '';
 
-            if (formStatus) {
-                formStatus.textContent = 'Your email app should open with this inquiry ready to send. If it does not, email info@mvbc.com.';
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.textContent = 'Saving...';
             }
 
-            window.location.href = mailtoUrl;
+            if (formStatus) formStatus.textContent = 'Saving your inquiry...';
+
+            fetch('backend/inquiries.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'submit',
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    division: formData.get('division'),
+                    message: formData.get('message'),
+                    website: formData.get('website')
+                })
+            })
+                .then(function(response) {
+                    return response.json().then(function(result) {
+                        if (!response.ok) throw new Error(result.error || 'Unable to save your inquiry.');
+                        return result;
+                    });
+                })
+                .then(function() {
+                    contactForm.reset();
+                    if (formStatus) formStatus.textContent = 'Your inquiry has been saved. MVBC will follow up using the contact details you provided.';
+                })
+                .catch(function(error) {
+                    if (formStatus) formStatus.textContent = error.message || 'Unable to save your inquiry. Please try again.';
+                })
+                .finally(function() {
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                        submitButton.textContent = originalButtonText;
+                    }
+                });
         });
     }
 
