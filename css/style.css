@@ -284,9 +284,8 @@ img {
     min-height: 100vh;
     display: flex;
     align-items: center;
-    background: linear-gradient(135deg, rgba(26,95,42,0.9), rgba(26,26,46,0.85)),
-                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1" x="0" y="0" width="100" height="100"/></svg>');
-    background-size: cover;
+    background: linear-gradient(110deg, rgba(18,55,31,0.88), rgba(26,26,46,0.62)),
+                url('../images/civil_vision_bridge.png') center 48% / cover no-repeat;
     position: relative;
     padding-top: 80px;
     color: var(--white);
@@ -545,11 +544,12 @@ img {
 .product-card {
     background: var(--white);
     border-radius: 12px;
-    padding: 30px 20px;
+    padding: 0 0 22px;
     text-align: center;
     box-shadow: var(--shadow);
     transition: var(--transition);
     border: 1px solid rgba(0,0,0,0.04);
+    overflow: hidden;
 }
 
 .product-card:hover {
@@ -558,27 +558,31 @@ img {
 }
 
 .product-img {
-    width: 80px;
-    height: 80px;
-    background: rgba(26,95,42,0.08);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    color: var(--primary-color);
-    margin: 0 auto 20px;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: #edf1ee;
+    margin: 0 0 16px;
+    overflow: hidden;
+}
+
+.product-img img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .product-card h4 {
     font-size: 1.05rem;
     margin-bottom: 8px;
     color: var(--dark);
+    padding: 0 16px;
 }
 
 .product-card p {
     color: var(--gray);
     font-size: 0.88rem;
+    padding: 0 16px;
 }
 
 /* ==================== */
@@ -612,9 +616,33 @@ img {
 /* ==================== */
 .page-banner {
     padding: 160px 0 80px;
-    background: linear-gradient(135deg, rgba(26,95,42,0.92), rgba(26,26,46,0.9));
+    background-image: linear-gradient(110deg, rgba(15,42,27,0.84), rgba(20,29,28,0.62)),
+                      url('../images/civil_vision_completed_project.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     color: var(--white);
     text-align: center;
+}
+
+.page-banner--about {
+    background-image: linear-gradient(110deg, rgba(15,42,27,0.84), rgba(20,29,28,0.62)),
+                      url('../images/civil_vision_sustainable_city.png');
+}
+
+.page-banner--services {
+    background-image: linear-gradient(110deg, rgba(15,42,27,0.84), rgba(20,29,28,0.62)),
+                      url('../files/road cons mvbc.jpg');
+}
+
+.page-banner--products {
+    background-image: linear-gradient(110deg, rgba(15,42,27,0.84), rgba(20,29,28,0.62)),
+                      url('../files/Steel-Raw-Material-Warehouse.jpg');
+}
+
+.page-banner--contact {
+    background-image: linear-gradient(110deg, rgba(15,42,27,0.84), rgba(20,29,28,0.62)),
+                      url('../files/Transpo mvbc.jpg');
 }
 
 .page-banner h1 {
@@ -645,30 +673,29 @@ img {
 }
 
 .about-img {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    aspect-ratio: 4 / 3;
+    width: 100%;
+    min-width: 0;
     border-radius: 16px;
-    min-height: 400px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--white);
-    font-size: 5rem;
-    position: relative;
+    min-height: 360px;
     overflow: hidden;
 }
 
-.about-img::before {
-    content: '';
-    position: absolute;
-    width: 150%;
-    height: 150%;
-    background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.03) 10px, rgba(255,255,255,0.03) 20px);
-    animation: slide 20s linear infinite;
+.about-img img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: cover;
+    border-radius: 8px;
 }
 
-@keyframes slide {
-    0% { transform: translate(-10%, -10%); }
-    100% { transform: translate(0, 0); }
+.about-img img:first-child {
+    grid-row: 1 / span 2;
 }
 
 .about-content h2 {
@@ -721,7 +748,7 @@ img {
     margin-bottom: 80px;
 }
 
-.service-detail:nth-child(even) .service-img {
+.service-detail.reverse .service-img {
     order: 2;
 }
 
@@ -732,8 +759,15 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 4rem;
-    color: var(--primary-color);
+    overflow: hidden;
+}
+
+.service-img img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 350px;
+    object-fit: cover;
 }
 
 .service-content h3 {
@@ -794,6 +828,13 @@ img {
     justify-content: center;
     font-size: 3rem;
     color: var(--white);
+}
+
+.product-detail-img img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .product-detail-info {
@@ -1001,7 +1042,7 @@ img {
     .products-grid { grid-template-columns: repeat(2, 1fr); }
     .about-grid { grid-template-columns: 1fr; }
     .service-detail { grid-template-columns: 1fr; }
-    .service-detail:nth-child(even) .service-img { order: 0; }
+    .service-detail.reverse .service-img { order: 0; }
     .products-page-grid { grid-template-columns: repeat(2, 1fr); }
     .contact-grid { grid-template-columns: 1fr; }
     .footer-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1030,6 +1071,7 @@ img {
     .header-actions > .btn { display: none; }
     .hero-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 12px; }
     .stat-item { min-width: 0; overflow-wrap: anywhere; }
+    .about-img { min-height: 300px; gap: 8px; }
 }
 
 /* Mobile Menu Active */
