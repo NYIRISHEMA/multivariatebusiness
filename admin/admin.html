@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>MVBC Inquiry Admin</title>
+    <link rel="icon" type="image/png" href="../images/MVBC LOGO NBG.png">
+    <link rel="stylesheet" href="admin.css">
+    <script src="admin.js" defer></script>
+</head>
+<body>
+    <header class="admin-header">
+        <a class="brand" href="../index.html">
+            <img src="../images/MVBC LOGO NBG.png" alt="">
+            <span>MVBC <strong>Admin</strong></span>
+        </a>
+        <div class="header-actions">
+            <a class="site-link" href="../index.html">View website</a>
+            <button class="button button-secondary" id="logoutButton" type="button" hidden>Sign out</button>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        <section class="login-panel" id="loginPanel" aria-labelledby="loginHeading" hidden>
+            <div class="eyebrow">Administration</div>
+            <h1 id="loginHeading">Sign in to inquiries</h1>
+            <p class="muted">Use your configured MVBC administrator credentials.</p>
+            <form id="loginForm">
+                <label for="adminUsername">Username</label>
+                <input id="adminUsername" name="username" type="text" autocomplete="username" required>
+                <label for="adminPassword">Password</label>
+                <input id="adminPassword" name="password" type="password" autocomplete="current-password" required>
+                <button class="button button-primary full-width" type="submit">Sign in</button>
+                <p class="form-message" id="loginMessage" role="status" aria-live="polite"></p>
+            </form>
+        </section>
+
+        <section id="dashboard" hidden>
+            <div class="page-heading">
+                <div>
+                    <div class="eyebrow">Customer messages</div>
+                    <h1>Inquiries</h1>
+                </div>
+                <button class="button button-primary" id="newInquiryButton" type="button">＋ New inquiry</button>
+            </div>
+
+            <div class="summary-grid" aria-label="Inquiry totals">
+                <article class="summary-item"><span>All</span><strong id="totalCount">0</strong></article>
+                <article class="summary-item"><span>New</span><strong id="newCount">0</strong></article>
+                <article class="summary-item"><span>In progress</span><strong id="progressCount">0</strong></article>
+                <article class="summary-item"><span>Responded</span><strong id="respondedCount">0</strong></article>
+                <article class="summary-item"><span>Closed</span><strong id="closedCount">0</strong></article>
+            </div>
+
+            <div class="toolbar">
+                <label class="search-field">
+                    <span class="visually-hidden">Search inquiries</span>
+                    <input id="searchInput" type="search" placeholder="Search name, email, message">
+                </label>
+                <label class="filter-field">
+                    <span class="visually-hidden">Filter by status</span>
+                    <select id="statusFilter">
+                        <option value="all">All statuses</option>
+                        <option value="new">New</option>
+                        <option value="in_progress">In progress</option>
+                        <option value="responded">Responded</option>
+                        <option value="closed">Closed</option>
+                    </select>
+                </label>
+                <button class="button button-secondary" id="refreshButton" type="button">Refresh</button>
+            </div>
+
+            <p class="form-message" id="dashboardMessage" role="status" aria-live="polite"></p>
+            <div class="table-frame">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Contact</th>
+                            <th scope="col">Division</th>
+                            <th scope="col">Message</th>
+                            <th scope="col">Received</th>
+                            <th scope="col">Status</th>
+                            <th scope="col"><span class="visually-hidden">Actions</span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="inquiryRows"></tbody>
+                </table>
+                <p class="empty-state" id="emptyState" hidden>No inquiries match this view.</p>
+            </div>
+        </section>
+    </main>
+
+    <dialog class="editor-dialog" id="inquiryDialog" aria-labelledby="editorHeading">
+        <form id="inquiryEditor">
+            <div class="dialog-heading">
+                <div>
+                    <div class="eyebrow">Inquiry record</div>
+                    <h2 id="editorHeading">New inquiry</h2>
+                </div>
+                <button class="icon-button" id="closeDialogButton" type="button" aria-label="Close editor">×</button>
+            </div>
+            <input name="id" type="hidden">
+            <div class="editor-grid">
+                <div class="field">
+                    <label for="inquiryName">Full name</label>
+                    <input id="inquiryName" name="name" minlength="2" maxlength="100" required>
+                </div>
+                <div class="field">
+                    <label for="inquiryEmail">Email</label>
+                    <input id="inquiryEmail" name="email" type="email" maxlength="254" required>
+                </div>
+                <div class="field">
+                    <label for="inquiryPhone">Phone</label>
+                    <input id="inquiryPhone" name="phone" type="tel" maxlength="60">
+                </div>
+                <div class="field">
+                    <label for="inquiryDivision">Division</label>
+                    <select id="inquiryDivision" name="division" required>
+                        <option value="construction">Construction & Real Estate</option>
+                        <option value="trading">Commodity Trading</option>
+                        <option value="industrial">Industrial Products & Hardware Supply</option>
+                        <option value="general">General Inquiry</option>
+                    </select>
+                </div>
+                <div class="field field-wide">
+                    <label for="inquiryMessage">Message</label>
+                    <textarea id="inquiryMessage" name="message" minlength="10" maxlength="3000" rows="6" required></textarea>
+                </div>
+                <div class="field" id="statusField">
+                    <label for="inquiryStatus">Status</label>
+                    <select id="inquiryStatus" name="status">
+                        <option value="new">New</option>
+                        <option value="in_progress">In progress</option>
+                        <option value="responded">Responded</option>
+                        <option value="closed">Closed</option>
+                    </select>
+                </div>
+            </div>
+            <p class="form-message" id="editorMessage" role="status" aria-live="polite"></p>
+            <div class="dialog-actions">
+                <button class="button button-secondary" id="cancelDialogButton" type="button">Cancel</button>
+                <button class="button button-primary" id="saveInquiryButton" type="submit">Save inquiry</button>
+            </div>
+        </form>
+    </dialog>
+</body>
+</html>
